@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+
+  localstack: # https://docs.localstack.cloud/overview/
+    image: localstack/localstack:3.7.2
+    restart: unless-stopped
+    ports:
+      - "4566:4566" # LocalStack Gateway
+#      Services like OpenSearch or Elasticsearch use external software which binds to separate ports,
+#      unless configured otherwise (e.g. using 'OPENSEARCH_ENDPOINT_STRATEGY=domain'):
+#      https://docs.localstack.cloud/references/external-ports/
+#      - "4510-4559:4510-4559"
+    environment:
+      - DEBUG=1 # Increases log level, prints more verbose logs
+#      - DOCKER_HOST=unix:///var/run/docker.sock # Only necessary for some services
+    volumes:
+      - ./localstack/localstack-script.sh:/etc/localstack/init/ready.d/script.sh # Init script
+      - localstack:/var/lib/localstack"
+#      - "/var/run/docker.sock:/var/run/docker.sock" # Only necessary for some services
+
+networks:
+  internal:
+
+volumes:
+  localstack:

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>dev.codesoapbox</groupId>
+        <artifactId>contract-testing-sample</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <artifactId>producer-app</artifactId>
+    <version>${revision}</version>
+
+    <dependencies>
+        <!-- Common -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+        <!-- END of Common -->
+
+        <!-- AWS -->
+        <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-starter-sqs</artifactId>
+        </dependency>
+        <!-- END of AWS -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok-mapstruct-binding.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- Test configuration -->
+            <plugin>
+                <!-- Unit tests -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <properties>
+                        <configurationParameters>
+                            <!-- Enable parallel test execution: -->
+                            junit.jupiter.execution.parallel.enabled=true
+
+                            <!-- Execute tests within a class in parallel: -->
+                            junit.jupiter.execution.parallel.mode.default=concurrent
+
+                            <!-- Execute test classes in parallel: -->
+                            junit.jupiter.execution.parallel.mode.classes.default=concurrent
+
+                            <!-- Compute the desired parallelism based on the number of available processors/cores: -->
+                            junit.jupiter.execution.parallel.config.strategy=dynamic
+
+                            <!-- Desired parallelism is multiplied by this value: -->
+                            junit.jupiter.execution.parallel.config.dynamic.factor=1
+                        </configurationParameters>
+                    </properties>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- Integration tests -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <!--
+                    Fool Sonar to show both unit and integration tests together by instructing Failsafe to store its
+                    test reports in the same directory as Surefire instead of the default failsafe-reports. See:
+                    https://theholyjava.wordpress.com/2012/02/05/separating-integration-and-unit-tests-with-maven-sonar-failsafe-and-jacoco/
+                    -->
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <properties>
+                        <configurationParameters>
+                            <!--
+                            There are many ways to configure parallelism.
+                            We must think about how we want our integration tests to work, especially in terms of
+                            TestContainers:
+                            - We could run all tests sequentially (no parallelism) and share containers between
+                              test classes
+                            - We could run only methods within test classes sequentially, but test classes in parallel,
+                              sharing containers only within a test class
+                            -->
+                            <!-- Enable parallel test execution: -->
+                            <!-- junit.jupiter.execution.parallel.enabled=true-->
+
+                            <!-- Execute tests within class in sequence: -->
+                            <!-- junit.jupiter.execution.parallel.mode.default=same_thread-->
+
+                            <!-- Execute test classes in parallel: -->
+                            <!-- junit.jupiter.execution.parallel.mode.classes.default=concurrent-->
+
+                            <!-- Compute desired parallelism based on number of available processors/cores: -->
+                            <!-- junit.jupiter.execution.parallel.config.strategy=fixed-->
+
+                            <!-- Desired parallelism: -->
+                            <!-- junit.jupiter.execution.parallel.config.fixed.parallelism=1-->
+                        </configurationParameters>
+                    </properties>
+                </configuration>
+            </plugin>
+            <!-- END Test configuration -->
+        </plugins>
+    </build>
+</project>

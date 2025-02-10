@@ -1,0 +1,22 @@
+producer-app-url: http://localhost:8081
+
+consumer-app:
+  sqs-fail-if-not-found-queue-strategy:
+    enabled: true
+
+spring:
+  application:
+    name: consumer-app
+
+  # AWS
+  cloud:
+    aws:
+      sqs:
+        endpoint: https://localhost.localstack.cloud:4566
+      s3:
+        endpoint: https://s3.localhost.localstack.cloud:4566
+      credentials:
+        access-key: none
+        secret-key: none
+      region:
+        static: eu-central-1
