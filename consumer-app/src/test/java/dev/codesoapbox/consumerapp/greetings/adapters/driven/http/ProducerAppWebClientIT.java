@@ -1,26 +1,38 @@
 package dev.codesoapbox.consumerapp.greetings.adapters.driven.http;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import dev.codesoapbox.consumerapp.greetings.config.ProducerAppSpringWebClientConfig;
 import dev.codesoapbox.consumerapp.testing.FakeReactiveCircuitBreakerFactory;
+import dev.codesoapbox.consumerapp.testing.WebClientContractTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@WireMockTest(httpPort = 8081)
+@WebClientContractTest
 class ProducerAppWebClientIT {
 
     private ProducerAppWebClient webClient;
+
+    @Autowired
+    @Qualifier(ProducerAppSpringWebClientConfig.PRODUCER_APP_SPRING_WEB_CLIENT_QUALIFIER)
+    private WebClient producerSpringWebClient;
+
     private FakeReactiveCircuitBreakerFactory reactiveCircuitBreakerFactory;
 
     @BeforeEach
     void setUp() {
         reactiveCircuitBreakerFactory = new FakeReactiveCircuitBreakerFactory();
-        WebClient producerSpringWebClient = WebClient.builder()
-                .baseUrl("http://localhost:8081")
-                .build();
         webClient = new ProducerAppWebClient(producerSpringWebClient, reactiveCircuitBreakerFactory);
+    }
+
+    @Test
+    void shouldGetGreetingMessage() {
+        String result = webClient.getGreetingMessage("Consumer");
+
+        assertThat(result).isEqualTo("Hello, Consumer (from test producer at 2025-01-01T00:00:00Z)!");
     }
 
     @Test

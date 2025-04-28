@@ -1,0 +1,12 @@
+# Human-readable description
+description: Should send a meeting acknowledgment
+# Label using which the consumer can trigger the output message
+label: acknowledgeMeeting
+input:
+  # The producer will trigger the message using this method
+  triggeredBy: acknowledgeMeeting()
+outputMessage:
+  # Destination (queue) to which the output message will be sent
+  sentTo: meeting-acknowledgments
+  # The body of the output message
+  bodyFromFile: bodies/meeting_acknowledgment_message.json

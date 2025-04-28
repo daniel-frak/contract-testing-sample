@@ -20,3 +20,8 @@ spring:
         secret-key: none
       region:
         static: eu-central-1
+
+logging:
+  level:
+    org.springframework.cloud.contract: DEBUG
+    com.github.tomakehurst.wiremock: DEBUG

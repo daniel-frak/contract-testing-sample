@@ -1,0 +1,17 @@
+description: Should return greeting given name
+request:
+  url: /greet
+  method: POST
+  bodyFromFile: bodies/greeting_request_body.json
+  matchers:
+    body:
+      - path: "$.consumerName"
+        type: by_regex
+        value: ".*"
+  headers:
+    Content-Type: "application/json"
+response:
+  status: 200
+  bodyFromFile: bodies/greeting_response_body.json
+  headers:
+    Content-Type: "application/json"
