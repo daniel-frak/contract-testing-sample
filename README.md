@@ -11,8 +11,8 @@
 - [Contract testing](#contract-testing)
   * [Contract testing glossary](#contract-testing-glossary)
 - [Known issues](#known-issues)
-  * [[Spring Cloud Contract bug - StubRepository treats every file as a potential mapping, leading to flaky tests](https://github.com/spring-cloud/spring-cloud-contract/issues/2163)](#-spring-cloud-contract-bug---stubrepository-treats-every-file-as-a-potential-mapping--leading-to-flaky-tests--https---githubcom-spring-cloud-spring-cloud-contract-issues-2163-)
-  * [[Spring Cloud Contract missing feature - failing test generation does not failt he build](https://github.com/spring-cloud/spring-cloud-contract/issues/1675)](#-spring-cloud-contract-missing-feature---failing-test-generation-does-not-failt-he-build--https---githubcom-spring-cloud-spring-cloud-contract-issues-1675-)
+  * [Spring Cloud Contract bug - StubRepository treats every file as a potential mapping, leading to flaky tests](#spring-cloud-contract-bug---stubrepository-treats-every-file-as-a-potential-mapping-leading-to-flaky-tests)
+  * [Spring Cloud Contract missing feature - failing test generation does not fail the build](#spring-cloud-contract-missing-feature---failing-test-generation-does-not-fail-the-build)
 - [References](#references)
 
 ## Overview
@@ -164,7 +164,7 @@ e.g., if it consisted only of a single property called `name`,
 then it would be successfully deserializable into `StubMapping`,
 creating an empty "catch-all" mapping, which would cause all contract tests to be flaky.
 
-### [Spring Cloud Contract missing feature - failing test generation does not failt he build](https://github.com/spring-cloud/spring-cloud-contract/issues/1675)
+### [Spring Cloud Contract missing feature - failing test generation does not fail the build](https://github.com/spring-cloud/spring-cloud-contract/issues/1675)
 
 If, for whatever reason, a contract cannot be converted into a test, the build will not fail — only a warning will be
 logged.
