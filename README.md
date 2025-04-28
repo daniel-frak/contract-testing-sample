@@ -19,6 +19,8 @@
 A sample project demonstrating contract testing between two Spring Boot applications using Spring Cloud Contract.
 The project showcases both HTTP and message-based (SQS) contract testing.
 
+The code adding contract testing is available as a [single commit](https://github.com/daniel-frak/contract-testing-sample/commit/529ab3f6680d8e067fc6bf6b9b1dcee1ac48216e).
+
 ## Prerequisites
 
 - JDK 21+
